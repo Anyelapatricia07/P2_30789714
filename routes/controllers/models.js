@@ -1,6 +1,7 @@
 const path = require('path');
-const sqlite3 = require('sqlite3')
-
+const sqlite3 = require('sqlite3');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 class ContactosModel {
     constructor() {
@@ -10,11 +11,11 @@ class ContactosModel {
     }
 
     connection() {
-        this.db.run('CREATE TABLE IF NOT EXISTS contacts(name VARCHAR(255), email VARCHAR(255), message TEXT,ip TEXT,fecha VARCHAR(255))');
+        this.db.run('CREATE TABLE IF NOT EXISTS contacts(name VARCHAR(255), email VARCHAR(255), message TEXT,ip TEXT,fecha VARCHAR(255), country TEXT)');
     }
 
-    save(name, email, message, ip, date) {
-        this.db.run("INSERT INTO contacts VALUES (?, ?, ?, ?, ?)", [name, email, message, ip, date]);
+    save(name, email, message, ip, date, country) {
+        this.db.run("INSERT INTO contacts VALUES (?, ?, ?, ?, ?)", [name, email, message, ip, date, country]);
     }
 
 }
@@ -28,18 +29,89 @@ class ContactosController {
 
     async save(req, res) {
         const { username, email, message } = req.body;
-        console.log(req.body)
-        const ip = req.headers['x-forwarded-for']?.split(',').shift() || req.socket?.remoteAddress;
+        const ipClient = req.headers['x-forwarded-for']?.split(',').shift() || req.socket?.remoteAddress;
         const date = new Date();
-        this.modelDatabase.save(username, email, message, ip, date);
-        res.send({
-            success: "Form submitted successfully",
-            username: username,
-            email: email,
-            message: message,
-            ip: ip,
-            date: date
-        });
+
+
+
+        const urlCountry = 'http://ipwho.is/' + ip;
+        const country = urlCountry.country
+
+
+
+        const response = req.body["g-recaptcha-response"];
+        const secret = process.env.RECAPTCHAPV;
+        const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${response}`;
+
+        const googleResponse = await fetch(url, { method: "post", });
+        const jsonResponse = await googleResponse.json();
+        if (jsonResponse.success) {
+
+            let transporter = nodemailer.createTransport({
+                host: "smtp-mail.outlook.com",
+                secureConnection: false,
+                port: 587,
+                tls: {
+                    ciphers: 'SSLv3'
+                },
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASSWORD
+                }
+            });
+
+            const html =
+                `
+            <p>Email: ${email}</p>
+            <p>Name: ${username}</p>
+            <p>Message: ${message}</p>
+            <p>Date: ${date}</p>
+            <p>IP: ${ipClient}</p>
+            <pli>Country: ${country}</p>`;
+
+            const receiver = {
+                from: process.env.EMAIL,
+                to: 'programacion2ais@dispostable.com',
+                subject: 'Contact information',
+                html: html
+            };
+
+
+            transporter.sendMail(receiver, (err, info) => {
+                if (err) console.log(err);
+
+                this.modelDatabase.save(username, email, message, ip, date, country);
+                res.send({
+                    success: "Form and email submitted successfully",
+                    username: username,
+                    email: email,
+                    message: message,
+                    ip: ip,
+                    date: date
+                });
+
+
+
+
+            })
+
+
+
+
+
+
+        }
+
+        else {
+            res.send({
+                failed: "Verify the recaptcha!!!!"
+            })
+        }
+
+
+
+
+
     }
 }
 
