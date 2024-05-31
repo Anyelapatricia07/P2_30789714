@@ -15,7 +15,7 @@ class ContactosModel {
     }
 
     save(name, email, message, ip, date, country) {
-        this.db.run("INSERT INTO contacts VALUES (?, ?, ?, ?, ?)", [name, email, message, ip, date, country]);
+        this.db.run("INSERT INTO contacts VALUES (?, ?, ?, ?, ?, ?)", [name, email, message, ip, date, country]);
     }
 
 }
