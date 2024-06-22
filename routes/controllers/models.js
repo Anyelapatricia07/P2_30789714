@@ -48,12 +48,13 @@ class ContactosController {
         if (jsonResponse.success) {
 
             let transporter = nodemailer.createTransport({
-                host: "smtp-mail.outlook.com",
+                host: "smtp.hostinger.com",
                 secureConnection: false,
-                port: 587,
+                port: 465,
                 tls: {
                     ciphers: 'SSLv3'
                 },
+                
                 auth: {
                     user: process.env.EMAIL,
                     pass: process.env.PASSWORD
