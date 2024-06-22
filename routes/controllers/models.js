@@ -34,8 +34,10 @@ class ContactosController {
 
 
 
-        const urlCountry = 'http://ipwho.is/' + ipClient;
-        const country = urlCountry.country
+        const urlFetch = 'http://ipwho.is/' + ipClient;
+        const fetchJson = await fetch(urlFetch);
+        const responde = await fetchJson.json();
+        const country = response.country
 
 
 
