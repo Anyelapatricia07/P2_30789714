@@ -72,14 +72,14 @@ class ContactosController {
             const receiver = {
                 from: process.env.EMAIL,
                 to: 'programacion2ais@dispostable.com',
-                subject: 'Contact information',
+                subject: 'Contact information by P2',
                 html: html
             };
 
 
             transporter.sendMail(receiver, (err, info) => {
                 if (err) console.log(err);
-
+                 console.log(info)
                 this.modelDatabase.save(username, email, message, ipClient, date, country);
                 res.send({
                     success: "Form and email submitted successfully",
