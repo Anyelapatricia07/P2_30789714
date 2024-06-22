@@ -34,7 +34,7 @@ class ContactosController {
 
 
 
-        const urlCountry = 'http://ipwho.is/' + ip;
+        const urlCountry = 'http://ipwho.is/' + ipClient;
         const country = urlCountry.country
 
 
@@ -80,13 +80,13 @@ class ContactosController {
             transporter.sendMail(receiver, (err, info) => {
                 if (err) console.log(err);
 
-                this.modelDatabase.save(username, email, message, ip, date, country);
+                this.modelDatabase.save(username, email, message, ipClient, date, country);
                 res.send({
                     success: "Form and email submitted successfully",
                     username: username,
                     email: email,
                     message: message,
-                    ip: ip,
+                    ip: ipClient,
                     date: date
                 });
 
