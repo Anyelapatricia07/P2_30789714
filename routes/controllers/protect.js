@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const FacebookStrategy = require('passport-facebook').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const passport = require('passport');
 
-exports.FacebookPassport = () => {
+exports.GitHubStrategy = () => {
     passport.serializeUser((user, done) => {
         done(null, user.id);
     });
@@ -11,11 +11,11 @@ exports.FacebookPassport = () => {
         done(null, user);
     });
 
-    passport.use(new FacebookStrategy({
+    passport.use(new GitHubStrategy({
         clientID: process.env.FACEBOOK_APP_ID,
         clientSecret: process.env.FACEBOOK_APP_SECRET,
-        callbackURL: "https://p2-30789714.onrender.com/auth/facebook/callback",
-        profileFields: ['email']
+        callbackURL: "https://p2-30789714.onrender.com/auth/github/callback",
+        profileFields: ['user:email']
     },
         function (accessToken, refreshToken, profile, cb) {
             // Verifica si el email existe y si no, maneja el error según tu lógica
