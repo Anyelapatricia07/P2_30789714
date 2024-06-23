@@ -15,17 +15,9 @@ exports.GitHubStrategyPassport = () => {
         clientID: process.env.FACEBOOK_APP_ID,
         clientSecret: process.env.FACEBOOK_APP_SECRET,
         callbackURL: "https://p2-30789714.onrender.com/auth/github/callback",
-        profileFields: ['user:email']
     },
         function (accessToken, refreshToken, profile, cb) {
-            // Verifica si el email existe y si no, maneja el error según tu lógica
-            if (!profile.emails || !profile.emails.length) {
-                return cb(new Error('No email found'), null);
-            }
-
-            // Solo pasa el email
-            const email = profile.emails[0].value
-            return cb(null, { email });
+            return cb(null, profile);
         }
     ));
 
