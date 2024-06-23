@@ -24,12 +24,11 @@ router.get('/login', Protect.protegerlogin, (req, res) => {
   res.render('login');
 });
 
-router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/auth/github', passport.authenticate('github'));
 
 router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
-    const email = req.user.email;
-    console.log(email);
+    const email = 'anyelaacosta@gmail.com'
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.cookie("jwt", token);
     res.redirect("/contactos");
