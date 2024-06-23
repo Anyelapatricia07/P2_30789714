@@ -41,7 +41,7 @@ router.get('/contactos', Protect.protegercontactos,async (req, res) => {
   const email = req.user.email;
   const contactos = await ControllerClient.modelDatabase.obtenerAllContactos();
   res.render('contactos', {
-    data: contactos,
+    get: contactos,
     email: email
   })
 
