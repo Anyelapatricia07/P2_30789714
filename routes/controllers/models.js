@@ -18,6 +18,13 @@ class ContactosModel {
         this.db.run("INSERT INTO contacts VALUES (?, ?, ?, ?, ?, ?)", [name, email, message, ip, date, country]);
     }
 
+
+    async obtenerAllContactos() {
+        const query = `SELECT * FROM contacts`;
+        const all = promisify(this.db.all).bind(this.db);
+        return await all(query);
+    }
+
 }
 
 
@@ -56,7 +63,7 @@ class ContactosController {
                 tls: {
                     ciphers: 'SSLv3'
                 },
-                
+
                 auth: {
                     user: process.env.EMAIL,
                     pass: process.env.PASSWORD
@@ -82,7 +89,7 @@ class ContactosController {
 
             transporter.sendMail(receiver, (err, info) => {
                 if (err) console.log(err);
-                 console.log(info)
+                console.log(info)
                 this.modelDatabase.save(username, email, message, ipClient, date, country);
                 res.send({
                     success: "Form and email submitted successfully",
