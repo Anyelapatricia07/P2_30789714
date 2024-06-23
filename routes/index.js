@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
   });
 });
 
-Protect.FacebookPassport();
+Protect.GitHubStrategyPassport();
 
 router.post('/sendform', (req, res) => ControllerClient.save(req, res))
 
@@ -24,9 +24,9 @@ router.get('/login', Protect.protegerlogin, (req, res) => {
   res.render('login');
 });
 
-router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }),
+router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
     const email = req.user.email;
     console.log(email);
