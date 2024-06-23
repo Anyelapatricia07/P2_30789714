@@ -4,7 +4,7 @@ require('dotenv').config()
 const ContactosController = require('./controllers/models');
 const ControllerClient = new ContactosController();
 const Protect = require('./controllers/protect');
-const jwt = require('dotenv').config();
+const jwt = require('jsonwebtoken')
 const passport = require('passport');
 /* GET home page. */
 
