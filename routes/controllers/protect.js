@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const GitHubStrategy = require('passport-github').Strategy;
 const passport = require('passport');
 
-exports.GitHubStrategy = () => {
+exports.GitHubStrategyPassport = () => {
     passport.serializeUser((user, done) => {
         done(null, user.id);
     });
